@@ -1,14 +1,19 @@
-import connectDB from "../../../lib/mongodb";
-import Vehicle from "../../../models/Vehicle";
+import connectDB from "@/lib/mongodb";
+import Vehicle from "@/models/Vehicle";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    const vehicle = await Vehicle.findById(
-      params.id
-    );
+    const vehicle = await Vehicle.findById(id);
+    if (!vehicle) {
+      return NextResponse.json(
+        { success: false, message: "Vehicle not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -16,10 +21,7 @@ export async function GET(req, { params }) {
     });
   } catch (error) {
     return NextResponse.json(
-      {
-        success: false,
-        message: error.message,
-      },
+      { success: false, message: error.message },
       { status: 500 }
     );
   }
@@ -28,15 +30,21 @@ export async function GET(req, { params }) {
 export async function PUT(req, { params }) {
   try {
     await connectDB();
-
+    const { id } = await params;
     const data = await req.json();
 
-    const vehicle =
-      await Vehicle.findByIdAndUpdate(
-        params.id,
-        data,
-        { new: true }
+    if (data.number) {
+      data.number = data.number.toUpperCase().trim();
+    }
+
+    const vehicle = await Vehicle.findByIdAndUpdate(id, data, { new: true });
+
+    if (!vehicle) {
+      return NextResponse.json(
+        { success: false, message: "Vehicle not found" },
+        { status: 404 }
       );
+    }
 
     return NextResponse.json({
       success: true,
@@ -44,35 +52,30 @@ export async function PUT(req, { params }) {
     });
   } catch (error) {
     return NextResponse.json(
-      {
-        success: false,
-        message: error.message,
-      },
+      { success: false, message: error.message },
       { status: 500 }
     );
   }
 }
 
-export async function DELETE(
-  req,
-  { params }
-) {
+export async function PATCH(req, { params }) {
+  return PUT(req, { params });
+}
+
+export async function DELETE(req, { params }) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    await Vehicle.findByIdAndDelete(
-      params.id
-    );
+    await Vehicle.findByIdAndDelete(id);
 
     return NextResponse.json({
       success: true,
+      message: "Vehicle deleted successfully",
     });
   } catch (error) {
     return NextResponse.json(
-      {
-        success: false,
-        message: error.message,
-      },
+      { success: false, message: error.message },
       { status: 500 }
     );
   }

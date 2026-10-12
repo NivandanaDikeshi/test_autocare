@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X, Wrench } from "lucide-react";
+import { Menu, X, Wrench, Shield, Car } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -14,27 +14,30 @@ export default function Navbar() {
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
     { name: "Booking", href: "/booking" },
-    { name: "Status", href: "/status" },
-    /*{ name: "Billing", href: "/billing" },*/
+    { name: "Repair Tracker", href: "/status" },
+    { name: "Invoices", href: "/billing" },
     { name: "Contact", href: "/contact" },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-2xl">
       <div className="max-w-7xl mx-auto px-5">
-        <div className="flex justify-between items-center h-16">
-
-          {/* LOGO */}
+        <div className="flex justify-between items-center h-20">
+          {/* BRAND LOGO */}
           <Link
             href="/"
-            className="flex items-center gap-2 text-2xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent"
+            className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-white group"
           >
-            <Wrench className="w-5 h-5 text-blue-400" />
-            AutoCare
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition">
+              <Car size={20} />
+            </div>
+            <span>
+              AutoCare<span className="text-cyan-400">Pro</span>
+            </span>
           </Link>
 
           {/* DESKTOP MENU */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-7">
             {links.map((link, i) => {
               const active = pathname === link.href;
 
@@ -42,61 +45,60 @@ export default function Navbar() {
                 <Link
                   key={i}
                   href={link.href}
-                  className={`relative text-sm font-medium transition ${
-                    active
-                      ? "text-white"
-                      : "text-gray-400 hover:text-white"
+                  className={`relative text-sm font-medium transition py-1 ${
+                    active ? "text-cyan-400 font-semibold" : "text-slate-300 hover:text-white"
                   }`}
                 >
                   {link.name}
-
-                  {/* Active underline */}
-                  <span
-                    className={`absolute left-0 -bottom-1 h-[2px] bg-gradient-to-r from-blue-400 to-purple-500 transition-all ${
-                      active ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
+                  {active && (
+                    <span className="absolute left-0 -bottom-1 h-0.5 w-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full" />
+                  )}
                 </Link>
               );
             })}
+          </div>
 
-            {/* CTA BUTTON */}
+          {/* ACTION BUTTONS */}
+          <div className="hidden sm:flex items-center gap-3">
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition"
+            >
+              <Shield size={14} className="text-cyan-400" />
+              <span>Admin Portal</span>
+            </Link>
+
             <Link
               href="/booking"
-              className="ml-4 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-semibold hover:opacity-90 transition shadow-lg"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs font-bold hover:opacity-90 transition shadow-lg shadow-blue-500/25"
             >
-              Book Now
+              Book Service
             </Link>
           </div>
 
-          {/* MOBILE BUTTON */}
+          {/* MOBILE TOGGLE */}
           <button
-            className="md:hidden text-white"
+            className="lg:hidden text-white p-2 rounded-lg bg-white/5 border border-white/10"
             onClick={() => setOpen(!open)}
           >
-            {open ? <X /> : <Menu />}
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
         {/* MOBILE MENU */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ${
-            open ? "max-h-96 pb-4 pt-3" : "max-h-0"
-          }`}
-        >
-          <div className="flex flex-col gap-2">
+        {open && (
+          <div className="lg:hidden border-t border-white/10 py-5 space-y-2">
             {links.map((link, i) => {
               const active = pathname === link.href;
-
               return (
                 <Link
                   key={i}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className={`px-4 py-2 rounded-lg text-sm transition ${
+                  className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition ${
                     active
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-300 bg-white/5 hover:bg-white/10"
+                      ? "bg-blue-600/30 text-cyan-300 border border-blue-500/30"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white"
                   }`}
                 >
                   {link.name}
@@ -104,16 +106,25 @@ export default function Navbar() {
               );
             })}
 
-            {/* Mobile CTA */}
-            <Link
-              href="/booking"
-              onClick={() => setOpen(false)}
-              className="mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-semibold text-center"
-            >
-              Book Now
-            </Link>
+            <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium"
+              >
+                <Shield size={16} className="text-cyan-400" />
+                <span>Admin Control Panel</span>
+              </Link>
+              <Link
+                href="/booking"
+                onClick={() => setOpen(false)}
+                className="py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-bold text-center shadow-lg"
+              >
+                Book Service Appointment
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );

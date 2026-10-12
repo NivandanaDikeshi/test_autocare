@@ -1,48 +1,83 @@
-import connectDB from "../../../lib/mongodb";
-import Booking from "../../../models/Booking";
-import Billing from "../../../models/Billing";
+import connectDB from "@/lib/mongodb";
+import Billing from "@/models/Billing";
 import { NextResponse } from "next/server";
 
-export async function PATCH(req, { params }) {
+export async function GET(req, { params }) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    const { status } = await req.json();
-
-    const booking = await Booking.findById(params.id);
-
-    if (!booking) {
+    const bill = await Billing.findById(id);
+    if (!bill) {
       return NextResponse.json(
-        { success: false, message: "Booking not found" },
+        { success: false, message: "Invoice not found" },
         { status: 404 }
       );
     }
 
-    booking.status = status;
-    await booking.save();
+    return NextResponse.json({ success: true, bill });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}
 
-    // ✅ Create invoice only when completed
-    if (status === "Completed") {
-      const existingBill = await Billing.findOne({
-        bookingId: booking._id,
-      });
+export async function PATCH(req, { params }) {
+  try {
+    await connectDB();
+    const { id } = await params;
+    const body = await req.json();
 
-      if (!existingBill) {
-        await Billing.create({
-          bookingId: booking._id,
-          customerName: booking.customerName,
-          customerEmail: booking.customerEmail,
-          vehicleNumber: booking.vehicleNumber,
-          serviceType: booking.serviceType,
-          amount: booking.totalAmount || booking.amount,
-          status: "Paid",
-        });
-      }
+    if (body.status) {
+      body.paymentStatus = body.status;
+    }
+    if (body.amount && !body.totalAmount) {
+      body.totalAmount = body.amount;
+    }
+
+    const bill = await Billing.findByIdAndUpdate(id, body, { new: true });
+
+    if (!bill) {
+      return NextResponse.json(
+        { success: false, message: "Invoice not found" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
       success: true,
-      booking,
+      bill,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req, { params }) {
+  return PATCH(req, { params });
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    await connectDB();
+    const { id } = await params;
+
+    const bill = await Billing.findByIdAndDelete(id);
+    if (!bill) {
+      return NextResponse.json(
+        { success: false, message: "Invoice not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Invoice deleted successfully",
     });
   } catch (error) {
     return NextResponse.json(

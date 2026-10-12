@@ -2,17 +2,39 @@ import mongoose from "mongoose";
 
 const ContactSchema = new mongoose.Schema(
   {
-    fullName: String,
-    email: String,
-    phone: String,
-    message: String,
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    message: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["New", "Replied", "Archived"],
+      default: "New",
+    },
+    replyMessage: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.models.Contact ||
-  mongoose.model("Contact", ContactSchema);
+const Contact =
+  mongoose.models.Contact || mongoose.model("Contact", ContactSchema);
+
+export default Contact;

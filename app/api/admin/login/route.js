@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import Admin from "@/models/Admin";
+import { generateToken } from "@/lib/auth";
 
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
-    // Basic validation
     if (!email || !password) {
       return NextResponse.json(
         {
@@ -15,37 +17,86 @@ export async function POST(req) {
       );
     }
 
-    // Demo admin credentials
-    const ADMIN_EMAIL = "admin@autocare.com";
-    const ADMIN_PASSWORD = "123456";
+    await connectDB();
 
-    // Check credentials
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    let admin = await Admin.findOne({ email: email.toLowerCase().trim() });
+
+    // Fallback: If no admin exists yet in database, seed default admin
+    const adminCount = await Admin.countDocuments();
+    if (adminCount === 0 && email.toLowerCase().trim() === "admin@autocare.com" && password === "123456") {
+      admin = await Admin.create({
+        email: "admin@autocare.com",
+        password: "123456",
+        role: "admin",
+      });
+    }
+
+    if (!admin) {
+      // Also check fallback for demo
+      if (email.toLowerCase().trim() === "admin@autocare.com" && password === "123456") {
+        admin = await Admin.create({
+          email: "admin@autocare.com",
+          password: "123456",
+          role: "admin",
+        });
+      } else {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Invalid email or password",
+          },
+          { status: 401 }
+        );
+      }
+    }
+
+    // Verify password
+    let isMatch = false;
+    if (typeof admin.comparePassword === "function") {
+      isMatch = await admin.comparePassword(password);
+    }
+    if (!isMatch && admin.password === password) {
+      isMatch = true;
+    }
+
+    if (!isMatch) {
       return NextResponse.json(
         {
-          success: true,
-          message: "Login successful",
-          user: {
-            email,
-            role: "admin",
-          },
+          success: false,
+          message: "Invalid email or password",
         },
-        { status: 200 }
+        { status: 401 }
       );
     }
 
-    // Invalid login
-    return NextResponse.json(
+    const token = generateToken(admin);
+
+    const response = NextResponse.json(
       {
-        success: false,
-        message: "Invalid email or password",
+        success: true,
+        message: "Login successful",
+        token,
+        user: {
+          id: admin._id,
+          email: admin.email,
+          role: admin.role,
+        },
       },
-      { status: 401 }
+      { status: 200 }
     );
 
+    // Set cookie on response
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return response;
   } catch (error) {
     console.error("Login API Error:", error);
-
     return NextResponse.json(
       {
         success: false,
