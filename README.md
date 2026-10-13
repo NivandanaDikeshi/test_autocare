@@ -98,9 +98,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - `/status` — Live Vehicle Repair Status Tracker
 - `/billing` — Public Invoices & PDF Downloads
 - `/contact` — Contact Workshop & Inquiries
-- `/login` — Admin Authentication Portal
+- `/login` — Customer Sign In Portal
+- `/register` — Customer Registration & Account Creation
+- `/profile` — Customer Profile & Garage Dashboard
 
 ### Admin Pages (Protected by Middleware)
+- `/admin/login` — Dedicated Staff & Admin Login Gateway
 - `/admin` — KPI Analytics & Overview
 - `/admin/services` — Service Catalog & Workshop Bay Tracking
 - `/admin/bookings` — Bookings Manager
@@ -116,8 +119,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 | Endpoint | Methods | Description |
 | :--- | :--- | :--- |
+| `/api/auth/register` | `POST` | Customer registration, vehicle onboarding, CRM sync, issue JWT |
+| `/api/auth/login` | `POST` | Customer sign in with email/phone & password |
+| `/api/auth/logout` | `POST` | Clear customer session cookie |
+| `/api/auth/me` | `GET`, `PUT` | Fetch/update customer profile, garage vehicles, appointments |
 | `/api/admin/login` | `POST` | Authenticate admin, issue JWT in HTTP-only cookie |
-| `/api/admin/logout` | `POST` | Clear auth cookie |
+| `/api/admin/logout` | `POST` | Clear admin auth cookie |
 | `/api/admin/stats` | `GET` | Dashboard KPI metrics and recent booking requests |
 | `/api/services/catalog` | `GET`, `POST` | Fetch or add customer-facing service packages |
 | `/api/services/catalog/[id]` | `GET`, `PUT`, `DELETE` | Read, update, or delete catalog service package |

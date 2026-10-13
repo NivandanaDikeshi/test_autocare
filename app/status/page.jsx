@@ -18,11 +18,25 @@ import {
 
 function StatusTracker() {
   const searchParams = useSearchParams();
-  const initialPlate = searchParams.get("v") || "";
+  const initialPlate =
+    searchParams.get("v") || searchParams.get("vehicle") || "";
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(initialPlate);
+  const [userVehicles, setUserVehicles] = useState([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("userData");
+      if (stored) {
+        const u = JSON.parse(stored);
+        if (Array.isArray(u.vehicles) && u.vehicles.length > 0) {
+          setUserVehicles(u.vehicles);
+        }
+      }
+    } catch (e) {}
+  }, []);
 
   const fetchBookings = async () => {
     try {
@@ -134,6 +148,35 @@ function StatusTracker() {
           <RefreshCw size={12} className="animate-spin text-cyan-400" />
           <span>Real-time live telemetry synced with workshop bays</span>
         </p>
+
+        {userVehicles.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-3 pt-3 border-t border-white/5">
+            <span className="text-xs text-slate-400">Quick Track My Garage:</span>
+            {userVehicles.map((v, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setSearch(v.vehicleNumber)}
+                className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
+                  search.toUpperCase() === v.vehicleNumber
+                    ? "bg-cyan-500 text-slate-950 font-bold border-cyan-400 shadow"
+                    : "bg-white/5 text-cyan-300 hover:bg-white/10 border-white/10"
+                }`}
+              >
+                {v.vehicleNumber}
+              </button>
+            ))}
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="text-xs text-slate-400 hover:text-white underline ml-1"
+              >
+                Clear filter
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* TRACKING CARDS */}

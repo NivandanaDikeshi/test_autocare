@@ -16,11 +16,29 @@ import {
 
 function BillingContent() {
   const searchParams = useSearchParams();
-  const initialSearch = searchParams.get("v") || "";
+  const initialSearch =
+    searchParams.get("v") ||
+    searchParams.get("search") ||
+    searchParams.get("phone") ||
+    searchParams.get("vehicle") ||
+    "";
 
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(initialSearch);
+  const [userVehicles, setUserVehicles] = useState([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("userData");
+      if (stored) {
+        const u = JSON.parse(stored);
+        if (Array.isArray(u.vehicles) && u.vehicles.length > 0) {
+          setUserVehicles(u.vehicles);
+        }
+      }
+    } catch (e) {}
+  }, []);
 
   const fetchBills = async () => {
     try {
@@ -67,6 +85,35 @@ function BillingContent() {
             className="w-full pl-12 pr-4 py-3.5 bg-slate-950 border border-white/10 rounded-2xl text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 uppercase font-medium"
           />
         </div>
+
+        {userVehicles.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-4 pt-3 border-t border-white/5">
+            <span className="text-xs text-slate-400">Quick Filter by Your Garage:</span>
+            {userVehicles.map((v, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setSearch(v.vehicleNumber)}
+                className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
+                  search.toUpperCase() === v.vehicleNumber
+                    ? "bg-cyan-500 text-slate-950 font-bold border-cyan-400 shadow"
+                    : "bg-white/5 text-cyan-300 hover:bg-white/10 border-white/10"
+                }`}
+              >
+                {v.vehicleNumber}
+              </button>
+            ))}
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="text-xs text-slate-400 hover:text-white underline ml-1"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* BILLING CARDS */}

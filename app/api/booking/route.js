@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import Vehicle from "@/models/Vehicle";
+import Customer from "@/models/Customer";
+import User from "@/models/User";
 
 // GET BOOKINGS (Supports search by vehicleNumber, phone, or all)
 export async function GET(req) {
@@ -88,6 +90,44 @@ export async function POST(request) {
       }
     } catch (vErr) {
       console.warn("Vehicle auto-create note:", vErr.message);
+    }
+
+    // Auto-sync vehicle with User account and Customer CRM records
+    try {
+      // 1. User account sync
+      const matchedUser = await User.findOne({
+        $or: [{ phone: booking.phone }, { email: booking.email }],
+      });
+      if (matchedUser) {
+        const hasVehicle = matchedUser.vehicles?.some(
+          (v) => v.vehicleNumber === booking.vehicleNumber
+        );
+        if (!hasVehicle) {
+          matchedUser.vehicles.push({
+            vehicleNumber: booking.vehicleNumber,
+            vehicleModel: booking.vehicleModel,
+          });
+          await matchedUser.save();
+        }
+      }
+
+      // 2. Customer CRM sync
+      const matchedCustomer = await Customer.findOne({ phone: booking.phone });
+      if (matchedCustomer) {
+        matchedCustomer.totalBookings = (matchedCustomer.totalBookings || 0) + 1;
+        const hasCustVehicle = matchedCustomer.vehicles?.some(
+          (v) => v.vehicleNumber === booking.vehicleNumber
+        );
+        if (!hasCustVehicle) {
+          matchedCustomer.vehicles.push({
+            vehicleNumber: booking.vehicleNumber,
+            vehicleModel: booking.vehicleModel,
+          });
+        }
+        await matchedCustomer.save();
+      }
+    } catch (syncErr) {
+      console.warn("User/Customer auto-sync note:", syncErr.message);
     }
 
     return NextResponse.json({

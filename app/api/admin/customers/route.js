@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Customer from "@/models/Customer";
 import Booking from "@/models/Booking";
+import User from "@/models/User";
 
 export async function GET(req) {
   try {
@@ -61,9 +62,22 @@ export async function GET(req) {
       }
     }
 
+    // Check which customers have registered online accounts in User collection
+    const users = await User.find({}, "email phone");
+    const userPhoneSet = new Set(users.map((u) => u.phone));
+    const userEmailSet = new Set(users.map((u) => u.email.toLowerCase()));
+
+    const enrichedCustomers = customers.map((c) => {
+      const obj = typeof c.toObject === "function" ? c.toObject() : { ...c };
+      obj.hasOnlineAccount =
+        userPhoneSet.has(c.phone) ||
+        (c.email && userEmailSet.has(c.email.toLowerCase()));
+      return obj;
+    });
+
     return NextResponse.json({
       success: true,
-      customers,
+      customers: enrichedCustomers,
     });
   } catch (error) {
     return NextResponse.json(

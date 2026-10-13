@@ -61,13 +61,15 @@ export default function Footer() {
             Client Center
           </h3>
           <div className="flex flex-col gap-2.5 text-xs text-slate-400">
+            <Link href="/login" className="hover:text-cyan-400 transition font-medium text-slate-300">Customer Sign In</Link>
+            <Link href="/register" className="hover:text-cyan-400 transition">Register Account</Link>
+            <Link href="/profile" className="hover:text-cyan-400 transition">My Vehicle Hub</Link>
             <Link href="/booking" className="hover:text-cyan-400 transition">Book an Appointment</Link>
             <Link href="/status" className="hover:text-cyan-400 transition">Live Repair Tracker</Link>
             <Link href="/billing" className="hover:text-cyan-400 transition">Download Invoices</Link>
-            <Link href="/contact" className="hover:text-cyan-400 transition">Contact Workshop</Link>
-            <Link href="/admin" className="hover:text-cyan-400 transition flex items-center gap-1.5 text-cyan-400 font-medium mt-1">
+            <Link href="/admin/login" className="hover:text-cyan-400 transition flex items-center gap-1.5 text-cyan-400 font-medium mt-1">
               <Shield size={12} />
-              <span>Admin Dashboard</span>
+              <span>Admin & Staff Portal</span>
             </Link>
           </div>
         </div>
@@ -103,7 +105,7 @@ export default function Footer() {
           <div className="flex gap-4 mt-2 sm:mt-0">
             <Link href="/about" className="hover:text-slate-300">About Us</Link>
             <Link href="/contact" className="hover:text-slate-300">Support</Link>
-            <Link href="/admin" className="hover:text-cyan-400">Staff Portal</Link>
+            <Link href="/admin/login" className="hover:text-cyan-400">Staff Portal</Link>
           </div>
         </div>
       </div>

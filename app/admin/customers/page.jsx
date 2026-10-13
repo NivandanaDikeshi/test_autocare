@@ -246,9 +246,20 @@ export default function CustomersPage() {
                     </div>
                   </div>
 
-                  <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-blue-500/10 text-cyan-400 border border-blue-500/20">
-                    {customer.totalBookings || 1} Service{(customer.totalBookings || 1) > 1 ? "s" : ""}
-                  </span>
+                  <div className="flex flex-col items-end gap-1.5">
+                    <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-blue-500/10 text-cyan-400 border border-blue-500/20">
+                      {customer.totalBookings || 1} Service{(customer.totalBookings || 1) > 1 ? "s" : ""}
+                    </span>
+                    {customer.hasOnlineAccount ? (
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        ● Online User
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-slate-400 px-2 py-0.5 rounded-full bg-white/5 border border-white/5">
+                        In-Shop
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* DETAILS */}

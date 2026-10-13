@@ -38,7 +38,7 @@ export default function Sidebar() {
       console.error(e);
     }
     localStorage.removeItem("adminAuth");
-    router.push("/login");
+    router.push("/admin/login");
   };
 
   return (

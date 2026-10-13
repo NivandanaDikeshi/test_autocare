@@ -12,6 +12,8 @@ import Service from "../models/Service.js";
 import ServiceItem from "../models/ServiceItem.js";
 import Contact from "../models/Contact.js";
 
+import User from "../models/User.js";
+
 async function seedData() {
   await connectDB();
   console.log("Connected to MongoDB for seeding...");
@@ -25,6 +27,21 @@ async function seedData() {
       role: "admin",
     });
     console.log("✅ Seeded default Admin user (admin@autocare.com / 123456)");
+  }
+
+  // 1.1 Customer User Account
+  const userExists = await User.findOne({ email: "customer@autocare.com" });
+  if (!userExists) {
+    await User.create({
+      name: "Ravini Amaya",
+      email: "customer@autocare.com",
+      phone: "0770254687",
+      password: "123456",
+      address: "12 Peradeniya Road, Kandy",
+      vehicles: [{ vehicleNumber: "VZR-5467", vehicleModel: "Honda Vezel" }],
+      role: "customer",
+    });
+    console.log("✅ Seeded default Customer user (customer@autocare.com / 123456)");
   }
 
   // 2. Customers

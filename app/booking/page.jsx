@@ -57,6 +57,26 @@ function BookingForm() {
     }
   }, [searchParams]);
 
+  // Auto-fill logged in customer details
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("userData");
+      if (stored) {
+        const u = JSON.parse(stored);
+        setFormData((prev) => ({
+          ...prev,
+          fullName: prev.fullName || u.name || "",
+          phone: prev.phone || u.phone || "",
+          email: prev.email || u.email || "",
+          vehicleNumber:
+            prev.vehicleNumber || (u.vehicles?.[0]?.vehicleNumber || ""),
+          vehicleModel:
+            prev.vehicleModel || (u.vehicles?.[0]?.vehicleModel || ""),
+        }));
+      }
+    } catch (e) {}
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [confirmedBooking, setConfirmedBooking] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
