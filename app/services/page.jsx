@@ -44,7 +44,7 @@ export default function ServicesPage() {
   });
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-20 px-6">
+    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-12 sm:py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* HEADER */}
         <div className="text-center mb-16">
@@ -126,18 +126,18 @@ export default function ServicesPage() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-7">
+                  <div className="p-5 sm:p-7">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">
                         {service.category}
                       </span>
                     </div>
 
-                    <h3 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition mb-3">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-cyan-300 transition mb-3">
                       {service.title}
                     </h3>
 
-                    <p className="text-sm text-slate-400 leading-relaxed mb-6 line-clamp-3">
+                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6 line-clamp-3">
                       {service.description}
                     </p>
 
@@ -151,7 +151,7 @@ export default function ServicesPage() {
                 </div>
 
                 {/* ACTION FOOTER */}
-                <div className="p-7 pt-0 space-y-2.5">
+                <div className="p-5 sm:p-7 pt-0 space-y-2.5">
                   <Link
                     href={`/services/${service.slug || service._id}`}
                     className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition"

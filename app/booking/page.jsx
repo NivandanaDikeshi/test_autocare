@@ -201,7 +201,7 @@ function BookingForm() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto bg-slate-900/60 backdrop-blur-2xl border border-white/10 p-8 md:p-10 rounded-3xl shadow-2xl">
+    <div className="max-w-3xl mx-auto bg-slate-900/60 backdrop-blur-2xl border border-white/10 p-5 sm:p-8 md:p-10 rounded-3xl shadow-2xl">
       {errorMsg && (
         <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm text-center">
           {errorMsg}
@@ -382,7 +382,7 @@ function BookingForm() {
 
 export default function BookingPage() {
   return (
-    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-20 px-6">
+    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-12 sm:py-20 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* HEADER */}
         <div className="text-center mb-14">

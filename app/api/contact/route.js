@@ -7,8 +7,11 @@ export async function POST(req) {
   try {
     await connectDB();
     const body = await req.json();
+    const fullName = (body.fullName || body.name || "").trim();
+    const email = (body.email || "").trim();
+    const message = (body.message || "").trim();
 
-    if (!body.fullName || !body.email || !body.message) {
+    if (!fullName || !email || !message) {
       return NextResponse.json(
         { success: false, message: "Please provide your name, email, and message." },
         { status: 400 }
@@ -16,10 +19,10 @@ export async function POST(req) {
     }
 
     const contact = await Contact.create({
-      fullName: body.fullName.trim(),
-      email: body.email.trim(),
+      fullName,
+      email,
       phone: body.phone ? body.phone.trim() : "",
-      message: body.message.trim(),
+      message,
       status: "New",
     });
 

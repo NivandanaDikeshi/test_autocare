@@ -2,7 +2,8 @@
   "name": "autocare-pro-client",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
+    "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "seed": "node scripts/seedDemoData.mjs"

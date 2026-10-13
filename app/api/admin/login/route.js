@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Admin from "@/models/Admin";
-import { generateToken } from "@/lib/auth";
+import User from "@/models/User";
+import { generateAdminToken } from "@/lib/auth";
 
 export async function POST(req) {
   try {
@@ -19,11 +20,40 @@ export async function POST(req) {
 
     await connectDB();
 
-    let admin = await Admin.findOne({ email: email.toLowerCase().trim() });
+    const cleanEmail = email.toLowerCase().trim();
+
+    // 1. Strict Role Enforcement: Prevent Customer accounts from logging into Admin Panel
+    const customerAccount = await User.findOne({ email: cleanEmail });
+    if (customerAccount && customerAccount.role !== "admin") {
+      return NextResponse.json(
+        {
+          success: false,
+          isCustomerAccount: true,
+          message:
+            "Access denied: Customer accounts cannot log in through the Admin Panel. Please use the Customer Login portal.",
+        },
+        { status: 403 }
+      );
+    }
+
+    // 2. Also check if customer demo email was entered
+    if (cleanEmail === "customer@autocare.com") {
+      return NextResponse.json(
+        {
+          success: false,
+          isCustomerAccount: true,
+          message:
+            "Access denied: Customer accounts cannot log in through the Admin Panel. Please use the Customer Login portal.",
+        },
+        { status: 403 }
+      );
+    }
+
+    let admin = await Admin.findOne({ email: cleanEmail });
 
     // Fallback: If no admin exists yet in database, seed default admin
     const adminCount = await Admin.countDocuments();
-    if (adminCount === 0 && email.toLowerCase().trim() === "admin@autocare.com" && password === "123456") {
+    if (adminCount === 0 && cleanEmail === "admin@autocare.com" && password === "123456") {
       admin = await Admin.create({
         email: "admin@autocare.com",
         password: "123456",
@@ -33,7 +63,7 @@ export async function POST(req) {
 
     if (!admin) {
       // Also check fallback for demo
-      if (email.toLowerCase().trim() === "admin@autocare.com" && password === "123456") {
+      if (cleanEmail === "admin@autocare.com" && password === "123456") {
         admin = await Admin.create({
           email: "admin@autocare.com",
           password: "123456",
@@ -43,7 +73,7 @@ export async function POST(req) {
         return NextResponse.json(
           {
             success: false,
-            message: "Invalid email or password",
+            message: "Invalid administrator email or password",
           },
           { status: 401 }
         );
@@ -69,12 +99,12 @@ export async function POST(req) {
       );
     }
 
-    const token = generateToken(admin);
+    const token = generateAdminToken(admin);
 
     const response = NextResponse.json(
       {
         success: true,
-        message: "Login successful",
+        message: "Administrator login successful",
         token,
         user: {
           id: admin._id,
@@ -85,7 +115,7 @@ export async function POST(req) {
       { status: 200 }
     );
 
-    // Set cookies on response
+    // Set admin cookies on response and clear user cookies
     response.cookies.set("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -99,6 +129,13 @@ export async function POST(req) {
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
+    });
+    response.cookies.set("user_token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
     });
 
     return response;

@@ -71,26 +71,26 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-20 px-6">
+    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-12 sm:py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* HEADER */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 sm:mb-16">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-semibold uppercase tracking-wider">
             <MessageSquare size={14} /> Get In Touch
           </span>
 
-          <h1 className="text-4xl md:text-6xl font-black mt-6 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black mt-5 tracking-tight">
             We're Here To <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Help You</span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-base text-slate-400 mt-4 leading-relaxed">
+          <p className="max-w-2xl mx-auto text-xs sm:text-sm md:text-base text-slate-400 mt-3 leading-relaxed">
             Have questions regarding diagnostic assessments, parts availability, or booking inquiries? Drop us a note or call our workshop line.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-start">
           {/* CONTACT FORM */}
-          <div className="bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl">
+          <div className="bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl">
             <h2 className="text-2xl font-bold text-white mb-2">Send a Direct Message</h2>
             <p className="text-xs text-slate-400 mb-8">
               Fill out this form and our support dispatch team will respond promptly.

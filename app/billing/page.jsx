@@ -141,7 +141,7 @@ function BillingContent() {
           {filteredBills.map((bill) => (
             <div
               key={bill._id}
-              className="bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-7 hover:border-cyan-500/30 transition-all duration-300 flex flex-col justify-between shadow-2xl group"
+              className="bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-5 sm:p-7 hover:border-cyan-500/30 transition-all duration-300 flex flex-col justify-between shadow-2xl group"
             >
               <div>
                 {/* TOP HEADER */}
@@ -214,7 +214,7 @@ function BillingContent() {
 
 export default function BillingPage() {
   return (
-    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-20 px-6">
+    <section className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white py-12 sm:py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* HEADER */}
         <div className="text-center mb-14">

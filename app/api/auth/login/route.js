@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
+import Admin from "@/models/Admin";
 import { generateUserToken } from "@/lib/auth";
 
 export async function POST(req) {
@@ -22,12 +23,39 @@ export async function POST(req) {
 
     const cleanId = identifier.toLowerCase();
 
-    // 1. Find user by email OR phone
+    // 1. Strict Role Enforcement: Prevent Administrators from logging in via Customer portal
+    const adminCheck = await Admin.findOne({ email: cleanId });
+    if (adminCheck) {
+      return NextResponse.json(
+        {
+          success: false,
+          isAdminAccount: true,
+          message:
+            "Admin accounts cannot log in through the Customer portal. Please sign in via the dedicated Admin Panel.",
+        },
+        { status: 403 }
+      );
+    }
+
+    // 2. Find user by email OR phone
     let user = await User.findOne({
       $or: [{ email: cleanId }, { phone: identifier }],
     });
 
-    // 2. Demo fallback if user count is 0 or demo login used
+    // If user has role admin in User model, also reject
+    if (user && user.role === "admin") {
+      return NextResponse.json(
+        {
+          success: false,
+          isAdminAccount: true,
+          message:
+            "Admin accounts cannot log in through the Customer portal. Please sign in via the dedicated Admin Panel.",
+        },
+        { status: 403 }
+      );
+    }
+
+    // 3. Demo fallback for customer
     if (
       !user &&
       cleanId === "customer@autocare.com" &&
@@ -54,7 +82,7 @@ export async function POST(req) {
       );
     }
 
-    // 3. Verify password
+    // 4. Verify password
     let isMatch = false;
     if (typeof user.comparePassword === "function") {
       isMatch = await user.comparePassword(password);
@@ -73,7 +101,7 @@ export async function POST(req) {
       );
     }
 
-    // 4. Generate JWT
+    // 5. Generate JWT
     const token = generateUserToken(user);
 
     const userResponse = {
@@ -96,13 +124,27 @@ export async function POST(req) {
       { status: 200 }
     );
 
-    // 5. Set HTTP-only cookie
+    // 6. Set HTTP-only cookie for customer and clear any admin cookies
     response.cookies.set("user_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
+    });
+    response.cookies.set("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+    response.cookies.set("admin_token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
     });
 
     return response;

@@ -91,38 +91,38 @@ export default function CustomerRegister() {
   };
 
   return (
-    <div className="relative min-h-[95vh] flex items-center justify-center bg-slate-950 overflow-hidden px-4 py-16">
+    <div className="relative min-h-screen flex items-center justify-center bg-slate-950 overflow-hidden px-4 py-10 sm:py-16">
       {/* Background Lighting Effects */}
-      <div className="absolute top-1/4 -left-20 h-96 w-96 bg-blue-600/15 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 h-96 w-96 bg-cyan-500/15 blur-[140px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 -left-20 h-72 w-72 sm:h-96 sm:w-96 bg-blue-600/15 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-20 h-72 w-72 sm:h-96 sm:w-96 bg-cyan-500/15 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-xl">
         {/* LOGO */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-block group">
-            <div className="h-16 w-16 mx-auto flex items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 text-white shadow-xl shadow-blue-500/25 group-hover:scale-105 transition">
-              <Car size={32} />
+            <div className="h-14 w-14 sm:h-16 sm:w-16 mx-auto flex items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 text-white shadow-xl shadow-blue-500/25 group-hover:scale-105 transition">
+              <Car size={30} />
             </div>
-            <h1 className="text-3xl font-extrabold text-white mt-4 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-3.5 tracking-tight">
               AutoCare<span className="text-cyan-400">Pro</span>
             </h1>
           </Link>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-400 text-xs sm:text-sm mt-1">
             Customer Registration & Vehicle Care Hub
           </p>
         </div>
 
         {/* REGISTRATION CARD */}
-        <div className="backdrop-blur-2xl bg-slate-900/60 border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
-          <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
+        <div className="backdrop-blur-2xl bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+          <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/10">
             <div>
-              <h2 className="text-xl font-bold text-white">Create New Account</h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <h2 className="text-lg sm:text-xl font-bold text-white">Create New Account</h2>
+              <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
                 Manage your vehicles, appointments & service records
               </p>
             </div>
-            <span className="flex items-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full border border-cyan-400/20 font-medium">
+            <span className="flex items-center gap-1 text-[11px] sm:text-xs text-cyan-400 bg-cyan-400/10 px-2.5 py-1 rounded-full border border-cyan-400/20 font-medium">
               <Sparkles size={12} />
               <span>Customer Signup</span>
             </span>
@@ -312,27 +312,26 @@ export default function CustomerRegister() {
             </button>
           </form>
 
-          {/* SIGN IN LINK */}
-          <div className="mt-6 text-center text-xs text-slate-400">
-            <span>Already registered with us? </span>
-            <Link
-              href="/login"
-              className="text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-4 ml-1"
-            >
-              Sign In to Your Account
-            </Link>
+          {/* SIGN IN & HOME LINKS */}
+          <div className="mt-6 text-center text-xs text-slate-400 space-y-2">
+            <div>
+              <span>Already registered with us? </span>
+              <Link
+                href="/login"
+                className="text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-4 ml-1"
+              >
+                Sign In to Your Account
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/"
+                className="text-slate-500 hover:text-slate-300 transition text-[11px] inline-flex items-center gap-1"
+              >
+                <span>← Return to Home</span>
+              </Link>
+            </div>
           </div>
-        </div>
-
-        {/* ADMIN GATEWAY LINK */}
-        <div className="mt-6 text-center">
-          <Link
-            href="/admin/login"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/60 border border-white/10 text-xs font-medium text-slate-400 hover:text-white hover:border-cyan-500/30 transition shadow"
-          >
-            <Shield size={14} className="text-cyan-400" />
-            <span>Staff or Administrator? Go to Staff & Admin Login</span>
-          </Link>
         </div>
       </div>
     </div>

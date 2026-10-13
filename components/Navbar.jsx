@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Menu,
   X,
-  Shield,
   Car,
   User,
   LogOut,
@@ -35,6 +34,12 @@ export default function Navbar() {
     { name: "Contact", href: "/contact" },
   ];
 
+  // Auto-close mobile menu on route change
+  useEffect(() => {
+    setOpen(false);
+    setUserDropdown(false);
+  }, [pathname]);
+
   // Sync user state from localStorage and listen to auth changes
   const checkUserStatus = () => {
     try {
@@ -61,9 +66,11 @@ export default function Navbar() {
           localStorage.setItem("userAuth", "true");
           localStorage.setItem("userData", JSON.stringify(data.user));
         } else {
-          // If server says not authenticated, clean user state
+          // If server says not authenticated, clean user state if not admin
           if (!localStorage.getItem("adminAuth")) {
-            // only clear user state if not admin
+            setCurrentUser(null);
+            localStorage.removeItem("userAuth");
+            localStorage.removeItem("userData");
           }
         }
       })
@@ -100,13 +107,13 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-2xl">
-      <div className="max-w-7xl mx-auto px-5">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-2xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-20">
           {/* BRAND LOGO */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-white group"
+            className="flex items-center gap-2.5 text-xl sm:text-2xl font-black tracking-tight text-white group"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition">
               <Car size={20} />
@@ -117,7 +124,7 @@ export default function Navbar() {
           </Link>
 
           {/* DESKTOP MENU */}
-          <div className="hidden lg:flex items-center gap-7">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-7">
             {links.map((link, i) => {
               const active = pathname === link.href;
 
@@ -139,7 +146,7 @@ export default function Navbar() {
           </div>
 
           {/* ACTION BUTTONS & AUTH */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2.5 lg:gap-3">
             {/* USER LOGIN / USER ACCOUNT */}
             {currentUser ? (
               <div className="relative" ref={dropdownRef}>
@@ -150,7 +157,7 @@ export default function Navbar() {
                   <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white text-[11px] font-bold">
                     {currentUser.name?.charAt(0).toUpperCase() || "U"}
                   </div>
-                  <span className="max-w-[110px] truncate">{currentUser.name}</span>
+                  <span className="max-w-[100px] truncate">{currentUser.name}</span>
                   <ChevronDown size={14} className="text-cyan-400" />
                 </button>
 
@@ -196,56 +203,40 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   href="/login"
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
+                  title="Customer Login"
                 >
                   <LogIn size={14} className="text-cyan-400" />
-                  <span>Sign In</span>
+                  <span>Customer Login</span>
                 </Link>
 
                 <Link
                   href="/register"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 hover:bg-cyan-500/20 transition"
+                  className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 hover:bg-cyan-500/20 transition"
                 >
                   <UserPlus size={14} />
                   <span>Register</span>
                 </Link>
               </div>
             )}
-
-            {/* SEPARATE ADMIN PORTAL BUTTON */}
-            <Link
-              href="/admin/login"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition"
-              title="Workshop Staff & Admin Access"
-            >
-              <Shield size={14} className="text-cyan-400" />
-              <span>Admin Portal</span>
-            </Link>
-
-            {/* BOOK SERVICE BUTTON */}
-            <Link
-              href="/booking"
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs font-bold hover:opacity-90 transition shadow-lg shadow-blue-500/25"
-            >
-              Book Service
-            </Link>
           </div>
 
           {/* MOBILE TOGGLE */}
           <button
-            className="lg:hidden text-white p-2 rounded-lg bg-white/5 border border-white/10"
+            className="lg:hidden text-white p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
             onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
           >
             {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* MOBILE MENU DRAWER */}
         {open && (
-          <div className="lg:hidden border-t border-white/10 py-5 space-y-2">
+          <div className="lg:hidden border-t border-white/10 py-5 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
             {links.map((link, i) => {
               const active = pathname === link.href;
               return (
@@ -274,7 +265,7 @@ export default function Navbar() {
                     className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-sm font-semibold"
                   >
                     <User size={16} />
-                    <span>My Account ({currentUser.name})</span>
+                    <span>My Garage & Profile ({currentUser.name})</span>
                   </Link>
 
                   <button
@@ -293,42 +284,25 @@ export default function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-semibold text-center"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-semibold text-center hover:bg-white/10"
                   >
                     <LogIn size={14} className="text-cyan-400" />
-                    <span>User Login</span>
+                    <span>Customer Login</span>
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold text-center"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold text-center hover:bg-cyan-500/20"
                   >
                     <UserPlus size={14} />
                     <span>Register</span>
                   </Link>
                 </div>
               )}
-
-              <Link
-                href="/admin/login"
-                onClick={() => setOpen(false)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white text-sm font-medium"
-              >
-                <Shield size={16} className="text-cyan-400" />
-                <span>Admin Login Portal</span>
-              </Link>
-
-              <Link
-                href="/booking"
-                onClick={() => setOpen(false)}
-                className="py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-bold text-center shadow-lg"
-              >
-                Book Service Appointment
-              </Link>
             </div>
           </div>
         )}
       </div>
-    </nav>
+    </header>
   );
 }

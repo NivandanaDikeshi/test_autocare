@@ -67,9 +67,9 @@ export default function Footer() {
             <Link href="/booking" className="hover:text-cyan-400 transition">Book an Appointment</Link>
             <Link href="/status" className="hover:text-cyan-400 transition">Live Repair Tracker</Link>
             <Link href="/billing" className="hover:text-cyan-400 transition">Download Invoices</Link>
-            <Link href="/admin/login" className="hover:text-cyan-400 transition flex items-center gap-1.5 text-cyan-400 font-medium mt-1">
-              <Shield size={12} />
-              <span>Admin & Staff Portal</span>
+            <Link href="/admin/login" className="hover:text-cyan-400 transition flex items-center gap-1.5 pt-1 text-slate-400">
+              <Shield size={12} className="text-cyan-400" />
+              <span>Staff & Admin Portal</span>
             </Link>
           </div>
         </div>
@@ -105,7 +105,6 @@ export default function Footer() {
           <div className="flex gap-4 mt-2 sm:mt-0">
             <Link href="/about" className="hover:text-slate-300">About Us</Link>
             <Link href="/contact" className="hover:text-slate-300">Support</Link>
-            <Link href="/admin/login" className="hover:text-cyan-400">Staff Portal</Link>
           </div>
         </div>
       </div>

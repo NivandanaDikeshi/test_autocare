@@ -48,8 +48,12 @@ export async function POST(request) {
     await connectDB();
 
     const body = await request.json();
+    const fullName = (body.fullName || body.customerName || "").trim();
+    const phone = (body.phone || body.customerPhone || "").trim();
+    const vehicleNumber = (body.vehicleNumber || "").toUpperCase().trim();
+    const serviceType = body.serviceType || "";
 
-    if (!body.fullName || !body.phone || !body.vehicleNumber || !body.serviceType) {
+    if (!fullName || !phone || !vehicleNumber || !serviceType) {
       return NextResponse.json(
         {
           success: false,
@@ -60,12 +64,12 @@ export async function POST(request) {
     }
 
     const booking = await Booking.create({
-      fullName: body.fullName.trim(),
-      phone: body.phone.trim(),
-      email: body.email ? body.email.trim() : "",
+      fullName,
+      phone,
+      email: body.email ? body.email.trim() : (body.customerEmail ? body.customerEmail.trim() : ""),
       vehicleModel: body.vehicleModel ? body.vehicleModel.trim() : "Standard",
-      vehicleNumber: body.vehicleNumber.toUpperCase().trim(),
-      serviceType: body.serviceType,
+      vehicleNumber,
+      serviceType,
       preferredDate: body.preferredDate || new Date().toISOString().split("T")[0],
       preferredTime: body.preferredTime || "10:00",
       notes: body.notes ? body.notes.trim() : "",

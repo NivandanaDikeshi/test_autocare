@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Plus,
+  Shield,
 } from "lucide-react";
 
 export default function AdminDashboard() {

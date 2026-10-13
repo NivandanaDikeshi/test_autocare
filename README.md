@@ -102,7 +102,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - `/register` — Customer Registration & Account Creation
 - `/profile` — Customer Profile & Garage Dashboard
 
-### Admin Pages (Protected by Middleware)
+### Admin Pages (Protected by Proxy)
 - `/admin/login` — Dedicated Staff & Admin Login Gateway
 - `/admin` — KPI Analytics & Overview
 - `/admin/services` — Service Catalog & Workshop Bay Tracking

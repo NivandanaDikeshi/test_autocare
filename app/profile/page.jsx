@@ -234,16 +234,16 @@ export default function CustomerProfile() {
         <div className="max-w-7xl mx-auto px-5 relative z-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             {/* USER INFO */}
-            <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center font-black text-2xl text-white shadow-xl shadow-cyan-500/20 border border-white/20">
+            <div className="flex items-center gap-3.5 sm:gap-5">
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center font-black text-xl sm:text-2xl text-white shadow-xl shadow-cyan-500/20 border border-white/20 shrink-0">
                 {user.name?.charAt(0).toUpperCase() || "U"}
               </div>
               <div>
-                <div className="flex items-center gap-3">
-                  <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
                     {user.name}
                   </h1>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold flex items-center gap-1">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] sm:text-xs font-semibold flex items-center gap-1">
                     <ShieldCheck size={13} />
                     Verified Client
                   </span>

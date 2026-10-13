@@ -310,10 +310,10 @@ export default function ServicesPage() {
       </div>
 
       {/* TAB NAVIGATION */}
-      <div className="flex items-center gap-2 p-1.5 bg-slate-900/80 border border-white/10 rounded-2xl w-fit">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 p-1.5 bg-slate-900/80 border border-white/10 rounded-2xl w-full sm:w-fit overflow-x-auto">
         <button
           onClick={() => setActiveTab("catalog")}
-          className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-semibold transition ${
+          className={`flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap ${
             activeTab === "catalog"
               ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25"
               : "text-slate-400 hover:text-white hover:bg-white/5"
@@ -793,7 +793,7 @@ export default function ServicesPage() {
       {/* ======================================================== */}
       {showAddRepairModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative">
+          <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
             <button
               onClick={() => setShowAddRepairModal(false)}
               className="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-full hover:bg-white/10 transition"
@@ -812,7 +812,7 @@ export default function ServicesPage() {
             </div>
 
             <form onSubmit={submitRepairForm} className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-slate-300 font-medium">Customer Name</label>
                   <input
@@ -837,7 +837,7 @@ export default function ServicesPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-slate-300 font-medium">Service Type</label>
                   <select

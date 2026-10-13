@@ -117,17 +117,17 @@ export default function ServiceDetailsPage() {
           </div>
 
           {/* PRICING & BOOKING ACTION */}
-          <div className="p-6 rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-white/10 flex items-center gap-6 shadow-xl shrink-0">
+          <div className="p-5 sm:p-6 rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 sm:gap-6 shadow-xl shrink-0">
             <div>
               <p className="text-xs text-slate-400 uppercase font-medium">Standard Pricing</p>
-              <h3 className="text-3xl font-black text-emerald-400 mt-0.5">
+              <h3 className="text-2xl sm:text-3xl font-black text-emerald-400 mt-0.5">
                 Rs. {(service.price || 0).toLocaleString()}
               </h3>
             </div>
 
             <Link
               href={`/booking?service=${encodeURIComponent(service.title)}`}
-              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:opacity-90 text-white font-bold text-sm flex items-center gap-2 transition shadow-lg shadow-blue-500/25"
+              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:opacity-90 text-white font-bold text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-blue-500/25"
             >
               <Calendar size={16} />
               <span>Book Appointment</span>
